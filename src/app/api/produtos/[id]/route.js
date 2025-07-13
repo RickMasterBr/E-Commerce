@@ -1,40 +1,81 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { ObjectId } from 'mongodb'; // Importante para converter o ID string para um ObjectId do MongoDB
+import { ObjectId } from 'mongodb';
 
-// --- FUNÇÃO DELETE: Para apagar um produto específico ---
-export async function DELETE(request, { params }) {
+// --- FUNÇÃO GET (por ID): Para buscar um único produto ---
+export async function GET(request, { params }) {
   try {
-    // O 'params' contém os segmentos dinâmicos do URL.
-    // Neste caso, o ID do produto.
     const { id } = params;
-
-    // Validação básica para ver se o ID foi fornecido
-    if (!id) {
-      return NextResponse.json({ message: 'ID do produto não fornecido.' }, { status: 400 });
-    }
-
     const client = await clientPromise;
     const db = client.db("e_commerce_db");
 
-    // O comando deleteOne precisa de um filtro.
-    // O _id no MongoDB é um objeto do tipo ObjectId, não uma simples string.
-    // Por isso, precisamos de converter a string 'id' para um ObjectId.
-    const result = await db.collection("produtos").deleteOne({
-      _id: new ObjectId(id)
-    });
+    const product = await db.collection("produtos").findOne({ _id: new ObjectId(id) });
 
-    // Verificamos se algum documento foi realmente apagado.
+    if (!product) {
+      return NextResponse.json({ message: 'Produto não encontrado.' }, { status: 404 });
+    }
+
+    return NextResponse.json(product, { status: 200 });
+
+  } catch (error) {
+    console.error(error);
+    if (error.name === 'BSONError') {
+      return NextResponse.json({ message: 'ID do produto inválido.' }, { status: 400 });
+    }
+    return NextResponse.json({ message: 'Erro ao buscar o produto.' }, { status: 500 });
+  }
+}
+
+// --- FUNÇÃO PUT: Para atualizar um produto existente ---
+export async function PUT(request, { params }) {
+  try {
+    const { id } = params;
+    const client = await clientPromise;
+    const db = client.db("e_commerce_db");
+
+    // Pega nos dados enviados para atualização
+    const updatedData = await request.json();
+
+    // Remove o campo _id do objeto de atualização para evitar erros
+    delete updatedData._id;
+
+    const result = await db.collection("produtos").updateOne(
+      { _id: new ObjectId(id) }, // Filtro para encontrar o documento certo
+      { $set: updatedData }      // O operador $set atualiza os campos fornecidos
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ message: 'Nenhum produto encontrado com este ID para atualizar.' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Produto atualizado com sucesso!' }, { status: 200 });
+
+  } catch (error) {
+    console.error(error);
+    if (error.name === 'BSONError') {
+      return NextResponse.json({ message: 'ID do produto inválido.' }, { status: 400 });
+    }
+    return NextResponse.json({ message: 'Erro ao atualizar o produto.' }, { status: 500 });
+  }
+}
+
+// --- FUNÇÃO DELETE: Para apagar um produto (já a tínhamos) ---
+export async function DELETE(request, { params }) {
+  try {
+    const { id } = params;
+    const client = await clientPromise;
+    const db = client.db("e_commerce_db");
+
+    const result = await db.collection("produtos").deleteOne({ _id: new ObjectId(id) });
+
     if (result.deletedCount === 0) {
       return NextResponse.json({ message: 'Nenhum produto encontrado com este ID.' }, { status: 404 });
     }
 
-    // Retorna uma resposta de sucesso.
     return NextResponse.json({ message: 'Produto apagado com sucesso!' }, { status: 200 });
 
   } catch (error) {
     console.error(error);
-    // Se o ID for inválido, o new ObjectId(id) pode dar erro.
     if (error.name === 'BSONError') {
       return NextResponse.json({ message: 'ID do produto inválido.' }, { status: 400 });
     }

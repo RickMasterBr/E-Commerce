@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ProductCard({ product }) {
   const router = useRouter();
@@ -45,12 +46,12 @@ export default function ProductCard({ product }) {
         </div>
       </div>
       <div className="border-t mt-auto pt-4 flex justify-between items-center">
-        <div>
-          <p className="text-3xl font-light">R$ {product.preco.toFixed(2)}</p>
-          <p className="text-sm text-gray-400 mt-1">{product.stock} unidades</p>
-        </div>
+        {/* ... (a parte do preço continua igual) */}
         <div className="flex gap-2">
-          {/* Adicionámos o botão de apagar aqui */}
+          {/* 2. Adicione este Link/Botão de Editar */}
+          <Link href={`/admin/editar/${product._id}`} className="bg-yellow-500 text-white text-sm font-bold py-2 px-3 rounded-lg hover:bg-yellow-600 transition-colors">
+            Editar
+          </Link>
           <button 
             onClick={() => handleDelete(product._id)}
             className="bg-red-500 text-white text-sm font-bold py-2 px-3 rounded-lg hover:bg-red-600 transition-colors"
