@@ -3,6 +3,7 @@
 // no navegador (usando hooks como useState e tratando de eventos).
 'use client';
 
+import toast from 'react-hot-toast'; // Importe o toast
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Importamos o router para redirecionar
 
@@ -62,15 +63,15 @@ export default function NovoProdutoPage() {
       });
 
       if (response.ok) {
-        alert('Produto criado com sucesso!');
+        toast.success('Produto criado com sucesso!');
         router.push('/'); // Redireciona para a página inicial
       } else {
         const errorData = await response.json();
-        alert(`Erro ao criar produto: ${errorData.message}`);
+        toast.error(`Erro ao criar produto: ${errorData.message}`);
       }
     } catch (error) {
       console.error('Falha ao submeter o formulário:', error);
-      alert('Ocorreu um erro. Verifique a consola.');
+      toast.error('Ocorreu um erro. Verifique a consola.');
     }
   };
 

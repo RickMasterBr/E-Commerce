@@ -2,35 +2,38 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import toast from 'react-hot-toast'; // Importe o toast
 
 export default function ProductCard({ product }) {
   const router = useRouter();
 
   const handleDelete = async (productId) => {
-    // Pedimos confirmação ao utilizador antes de apagar
     const confirmed = window.confirm('Tem a certeza que deseja apagar este produto?');
 
     if (confirmed) {
-      try {
-        const res = await fetch(`/api/produtos/${productId}`, {
-          method: 'DELETE',
-        });
+      const promise = fetch(`/api/produtos/${productId}`, {
+        method: 'DELETE',
+      });
 
-        if (res.ok) {
-          alert('Produto apagado com sucesso!');
-          // Atualiza os dados da página atual, fazendo um novo pedido ao servidor.
-          router.refresh();
-        } else {
-          const errorData = await res.json();
-          alert(`Erro ao apagar o produto: ${errorData.message}`);
+      // Usando toast.promise para uma UX ainda melhor!
+      toast.promise(
+        promise,
+        {
+          loading: 'A apagar o produto...',
+          success: (res) => {
+            if (!res.ok) {
+              throw new Error('Falha ao apagar.');
+            }
+            router.refresh();
+            return 'Produto apagado com sucesso!';
+          },
+          error: 'Não foi possível apagar o produto.',
         }
-      } catch (error) {
-        console.error(error);
-        alert('Falha ao comunicar com a API.');
-      }
+      );
     }
   };
-
+  
+  // O resto do seu JSX continua igual...
   return (
     <div className="border rounded-lg p-6 shadow-lg bg-white flex flex-col hover:shadow-xl transition-shadow duration-300">
       <div className="flex-grow">
@@ -46,9 +49,11 @@ export default function ProductCard({ product }) {
         </div>
       </div>
       <div className="border-t mt-auto pt-4 flex justify-between items-center">
-        {/* ... (a parte do preço continua igual) */}
+        <div>
+          <p className="text-3xl font-light">R$ {product.preco.toFixed(2)}</p>
+          <p className="text-sm text-gray-400 mt-1">{product.stock} unidades</p>
+        </div>
         <div className="flex gap-2">
-          {/* 2. Adicione este Link/Botão de Editar */}
           <Link href={`/admin/editar/${product._id}`} className="bg-yellow-500 text-white text-sm font-bold py-2 px-3 rounded-lg hover:bg-yellow-600 transition-colors">
             Editar
           </Link>

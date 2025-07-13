@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import toast from 'react-hot-toast'; // Importe o toast
 
 export default function EditarProdutoPage() {
   const router = useRouter();
@@ -60,14 +61,14 @@ export default function EditarProdutoPage() {
       });
 
       if (response.ok) {
-        alert('Produto atualizado com sucesso!');
+        toast.success('Produto atualizado com sucesso!');
         router.push('/');
       } else {
         const errorData = await response.json();
-        alert(`Erro ao atualizar produto: ${errorData.message}`);
+        toast.error(`Erro ao atualizar produto: ${errorData.message}`);
       }
     } catch (error) {
-      alert('Falha ao submeter o formulário.');
+      toast.error('Falha ao submeter o formulário.');
     }
   };
 
