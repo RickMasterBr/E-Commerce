@@ -6,6 +6,7 @@
 import toast from 'react-hot-toast'; // Importe o toast
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Importamos o router para redirecionar
+import Button from '@/components/Button';
 
 export default function NovoProdutoPage() {
   const router = useRouter(); // Inicializamos o router
@@ -127,9 +128,9 @@ export default function NovoProdutoPage() {
         
         {/* Botão de Submissão */}
         <div className="mt-8 text-right">
-          <button type="submit" className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+          <Button type="submit" variant="primary" size="sm">
             Salvar Produto
-          </button>
+          </Button>
         </div>
       </form>
     </div>

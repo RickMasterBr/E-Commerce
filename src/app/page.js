@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ProductList from '@/components/ProductList'; // Importamos o nosso novo componente de lista
+import Button from '@/components/Button';
 
 async function getProducts() {
   const res = await fetch('http://localhost:3000/api/produtos', {
@@ -18,9 +19,9 @@ export default async function HomePage() {
     <main className="p-8 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-12">
         <h1 className="text-4xl font-bold">Nosso Catálogo</h1>
-        <Link href="/admin/novo" className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+        <Button href="/admin/novo" variant="success" size="sm">
           + Adicionar Produto
-        </Link>
+        </Button>
       </div>
 
       {products.length === 0 ? (

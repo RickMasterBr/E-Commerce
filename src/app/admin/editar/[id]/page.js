@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import toast from 'react-hot-toast'; // Importe o toast
+import Button from '@/components/Button';
 
 export default function EditarProdutoPage() {
   const router = useRouter();
@@ -112,9 +113,9 @@ export default function EditarProdutoPage() {
           <input type="text" name="tamanho" id="tamanho" value={formData.detalhes.tamanho} onChange={handleChange} className="w-full px-3 py-2 border rounded-md" />
         </div>
         <div className="mt-8 text-right">
-          <button type="submit" className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
+          <Button type="submit" variant="primary" size="sm">
             Salvar Alterações
-          </button>
+          </Button>
         </div>
       </form>
     </div>

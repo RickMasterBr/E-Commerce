@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast'; // Importe o toast
+import Button from './Button';
 
 export default function ProductCard({ product }) {
   const router = useRouter();
@@ -33,7 +34,6 @@ export default function ProductCard({ product }) {
     }
   };
   
-  // O resto do seu JSX continua igual...
   return (
     <div className="border rounded-lg p-6 shadow-lg bg-white flex flex-col hover:shadow-xl transition-shadow duration-300">
       <div className="flex-grow">
@@ -54,16 +54,21 @@ export default function ProductCard({ product }) {
           <p className="text-sm text-gray-400 mt-1">{product.stock} unidades</p>
         </div>
         <div className="flex gap-2">
-          <Link href={`/admin/editar/${product._id}`} className="bg-yellow-500 text-white text-sm font-bold py-2 px-3 rounded-lg hover:bg-yellow-600 transition-colors">
-            Editar
-          </Link>
-          <button 
-            onClick={() => handleDelete(product._id)}
-            className="bg-red-500 text-white text-sm font-bold py-2 px-3 rounded-lg hover:bg-red-600 transition-colors"
-          >
-            Apagar
-          </button>
-        </div>
+        <Button 
+        href={`/admin/editar/${product._id}`} 
+        variant="warning" 
+        size="sm"
+  >
+        Editar
+    </Button>
+    <Button 
+        onClick={() => handleDelete(product._id)} 
+        variant="danger" 
+        size="sm"
+    >
+     Apagar
+    </Button>
+    </div>
       </div>
     </div>
   );
