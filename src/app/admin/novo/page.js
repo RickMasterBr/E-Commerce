@@ -17,6 +17,7 @@ export default function NovoProdutoPage() {
     categoria: '',
     preco: 0,
     stock: 0,
+    imagem: '',
     detalhes: {
       material: '',
       cor: '',
@@ -81,7 +82,7 @@ export default function NovoProdutoPage() {
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Adicionar Novo Produto</h1>
       <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        
+
         {/* Campo Nome */}
         <div className="mb-4">
           <label htmlFor="nome" className="block text-gray-700 font-bold mb-2">Nome do Produto</label>
@@ -113,7 +114,7 @@ export default function NovoProdutoPage() {
           <label htmlFor="material" className="block text-gray-700 font-bold mb-2">Material</label>
           <input type="text" name="material" id="material" value={formData.detalhes.material} onChange={handleChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        
+
         {/* Campo Cor */}
         <div className="mb-4">
           <label htmlFor="cor" className="block text-gray-700 font-bold mb-2">Cor</label>
@@ -125,12 +126,29 @@ export default function NovoProdutoPage() {
           <label htmlFor="tamanho" className="block text-gray-700 font-bold mb-2">Tamanho</label>
           <input type="text" name="tamanho" id="tamanho" value={formData.detalhes.tamanho} onChange={handleChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        
+
         {/* Botão de Submissão */}
         <div className="mt-8 text-right">
           <Button type="submit" variant="primary" size="sm">
             Salvar Produto
           </Button>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="imagem" className="block text-gray-700 font-bold mb-2">URL da Imagem</label>
+          <input
+            type="text"
+            name="imagem"
+            id="imagem"
+            value={formData.imagem || ''}
+            onChange={handleChange}
+            placeholder="https://exemplo.com/imagem.jpg"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {formData.imagem && (
+            <div className="mt-2">
+              <img src={formData.imagem} alt="Prévia" className="w-full h-64 object-cover rounded-md" />
+            </div>
+          )}
         </div>
       </form>
     </div>

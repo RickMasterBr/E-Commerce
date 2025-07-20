@@ -15,6 +15,7 @@ export default function EditarProdutoPage() {
     categoria: '',
     preco: 0,
     stock: 0,
+    imagem: '',
     detalhes: { material: '', cor: '', tamanho: '' },
   });
   const [loading, setLoading] = useState(true);
@@ -117,6 +118,25 @@ export default function EditarProdutoPage() {
             Salvar Alterações
           </Button>
         </div>
+        {/* Campo Imagem */}
+        <div className="mb-4">
+          <label htmlFor="imagem" className="block text-gray-700 font-bold mb-2">URL da Imagem</label>
+          <input
+            type="text"
+            name="imagem"
+            id="imagem"
+            value={formData.imagem || ''}
+            onChange={handleChange}
+            placeholder="https://exemplo.com/imagem.jpg"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {formData.imagem && (
+            <div className="mt-2">
+              <img src={formData.imagem} alt="Prévia" className="w-full h-64 object-cover rounded-md" />
+            </div>
+          )}
+        </div>
+
       </form>
     </div>
   );
