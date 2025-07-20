@@ -53,7 +53,7 @@ export default async function HomePage() {
         <section className="pt-10">
           <h2 className="text-[--color-text-dark] text-[22px] font-bold pb-3 px-4">Customer Favorites</h2>
           <div className="flex overflow-x-auto gap-4 px-4 pb-4">
-            {products.slice(0, 5).map((product) => (
+            {products.map((product) => (
               <div key={product._id} className="min-w-[200px] flex flex-col bg-white rounded-xl shadow p-4">
                 <div
                   className="aspect-square bg-center bg-cover rounded-xl mb-2"
