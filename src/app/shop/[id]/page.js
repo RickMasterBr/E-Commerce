@@ -59,16 +59,19 @@ export default async function ProductPage({ params }) {
         </div>
 
         {/* Imagem Principal */}
-        <div className="p-4">
-            <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden">
-                 <Image
-                    src={product.imagem || '/placeholder.jpg'}
-                    alt={product.nome}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority
-                 />
+        {/* Imagem Principal */}
+        <div className="p-4 flex justify-center"> {/* Centraliza o contêiner */}
+          <div className="w-full max-w-md"> {/* Define uma largura máxima (md = 768px, pode ajustar se quiser) */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl">
+              <Image
+                src={product.imagem || '/placeholder.jpg'}
+                alt={product.nome}
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
+              />
             </div>
+          </div>
         </div>
         
         {/* Detalhes do Produto */}
