@@ -1,11 +1,27 @@
+'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function OverviewPage() {
-  const recentOrders = [
-    { id: '#12345', date: 'July 15, 2024', status: 'Shipped', total: '$85.00' },
-    { id: '#12344', date: 'June 20, 2024', status: 'Delivered', total: '$120.00' },
-    { id: '#12343', date: 'May 5, 2024', status: 'Delivered', total: '$60.00' },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true);
+      const res = await fetch('/api/user/orders');
+      if (res.ok) {
+        const data = await res.json();
+        setOrders(data.orders);
+      }
+      setLoading(false);
+    };
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return <p>A carregar os seus pedidos...</p>
+  }
 
   return (
     <div>
@@ -23,18 +39,18 @@ export default function OverviewPage() {
             </tr>
           </thead>
           <tbody>
-            {recentOrders.map(order => (
-              <tr key={order.id} className="border-t border-t-[#e3d4d5]">
-                <td className="h-[72px] px-4 py-2 text-[#191011]">{order.id}</td>
-                <td className="h-[72px] px-4 py-2 text-[#8b5b5d]">{order.date}</td>
-                <td className="h-[72px] px-4 py-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="h-[72px] px-4 py-2 text-[#8b5b5d]">{order.total}</td>
-              </tr>
-            ))}
+          {orders.map(order => (
+                <tr key={order._id} className="border-t border-t-[#e3d4d5]">
+                  <td className="h-[72px] px-4 py-2 text-[#191011]">{order._id}</td>
+                  <td className="h-[72px] px-4 py-2 text-[#8b5b5d]">{order.date}</td>
+                  <td className="h-[72px] px-4 py-2">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="h-[72px] px-4 py-2 text-[#8b5b5d]">{order.total}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
