@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
   const router = useRouter();
+  const [loading, setLoading] = useState(false); // Adicionar estado de loading
 
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
@@ -30,24 +31,51 @@ export default function CheckoutPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Pedido Finalizado:", {
-      customer: formData,
-      items: cartItems,
-      summary: orderSummary
-    });
-    toast.success('Pedido realizado com sucesso!');
-    clearCart();
-    router.push('/order-confirmed');
-  };
-
   const orderSummary = useMemo(() => {
     const subtotal = cartItems.reduce((acc, item) => acc + item.preco * item.quantity, 0);
     const shipping = 5.00; // Taxa de envio fixa como no exemplo
     const total = subtotal + shipping;
     return { subtotal, shipping, total };
   }, [cartItems]);
+
+  // --- FUNÇÃO handleSubmit ATUALIZADA ---
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const orderData = {
+      customerData: formData,
+      items: cartItems,
+      summary: orderSummary,
+    };
+
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        throw new Error(errorResult.message || 'Falha ao finalizar o pedido.');
+      }
+
+      // Se a resposta for OK
+      const result = await response.json();
+      toast.success('Pedido realizado com sucesso!');
+      clearCart(); // Limpa o carrinho
+      // Redireciona para a página de confirmação, talvez passando o ID do pedido
+      router.push(`/order-confirmed?orderId=${result.orderId}`);
+
+    } catch (error) {
+      console.error("Erro no checkout:", error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   if (cartItems.length === 0) {
     return null; // Evita renderizar a página brevemente antes do redirecionamento
@@ -78,11 +106,11 @@ export default function CheckoutPage() {
                     <input name="lastName" onChange={handleInputChange} className="form-input h-14 rounded-xl border-[#e3d4d5] bg-[#fbf9f9]" required/>
                 </label>
             </div>
-             {/* ... (restante dos campos do formulário foram implementados aqui) ... */}
+             {/* ... (o resto do seu formulário continua aqui) ... */}
 
             <div className="flex px-4 py-8">
-              <button type="submit" className="w-full flex cursor-pointer items-center justify-center rounded-xl h-12 px-5 bg-[#e8b4b7] text-[#191011] text-base font-bold hover:bg-pink-300 transition-colors">
-                Place Order
+              <button type="submit" disabled={loading} className="w-full flex cursor-pointer items-center justify-center rounded-xl h-12 px-5 bg-[#e8b4b7] text-[#191011] text-base font-bold hover:bg-pink-300 transition-colors disabled:bg-pink-200 disabled:cursor-not-allowed">
+                {loading ? 'Finalizando...' : 'Place Order'}
               </button>
             </div>
           </form>
