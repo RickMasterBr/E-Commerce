@@ -88,19 +88,9 @@ git clone <url-do-seu-repositorio>
 cd <nome-do-repositorio>
 Instale as dependências:
 
-Bash
-
 npm install
-Configure as Variáveis de Ambiente:
-Crie um ficheiro chamado .env.local na raiz do projeto e adicione as seguintes variáveis:
+Configure as Variáveis de Ambiente
 
-Snippet de código
-
-# A sua connection string do MongoDB
-MONGODB_URI=mongodb+srv://<user>:<password>@<cluster-url>/<db-name>?retryWrites=true&w=majority
-
-# Uma chave secreta para o NextAuth.js (pode gerar uma online)
-NEXTAUTH_SECRET=a_sua_chave_secreta_aqui
 Execute o servidor de desenvolvimento:
 
 Bash
@@ -108,24 +98,7 @@ Bash
 npm run dev
 Abra http://localhost:3000 no seu navegador para ver a aplicação.
 
-📂 Estrutura do Projeto
-A estrutura de ficheiros segue as convenções do Next.js App Router:
 
-/
-├── public/                  # Ficheiros estáticos (imagens, fontes)
-├── src/
-│   ├── app/                 # Rotas, páginas e layouts da aplicação
-│   │   ├── api/             # Rotas da API (backend)
-│   │   │   ├── auth/        # API de autenticação e registo
-│   │   │   └── user/        # APIs para dados do utilizador (carrinho, etc.)
-│   │   ├── account/         # Páginas da área de perfil do utilizador
-│   │   ├── admin/           # Páginas administrativas (criar/editar produto)
-│   │   └── (pages)/         # Páginas principais como /shop, /cart, etc.
-│   ├── components/          # Componentes React reutilizáveis (Header, Footer, etc.)
-│   ├── context/             # Context API para gestão de estado global (CartContext)
-│   ├── lib/                 # Funções utilitárias (ex: conexão com MongoDB)
-│   └── models/              # (Opcional) Modelos/Schemas para a base de dados
-└── ... (ficheiros de configuração)
 🔌 API Endpoints
 O projeto inclui um conjunto de APIs para gerir os dados:
 
