@@ -1,12 +1,31 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
-// --- FUNÇÃO GET: Para buscar todos os produtos ---
+// --- FUNÇÃO GET ATUALIZADA: Para buscar produtos com filtros ---
 export async function GET(request) {
   try {
+    // Extrai os parâmetros de busca da URL da requisição
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get('search');
+    const category = searchParams.get('category');
+
     const client = await clientPromise;
     const db = client.db("e_commerce_db");
-    const produtos = await db.collection("produtos").find({}).toArray();
+
+    // Monta o objeto de query para o MongoDB
+    let query = {};
+
+    if (search) {
+      // Cria uma busca por texto insensível a maiúsculas/minúsculas no nome do produto
+      query.nome = { $regex: search, $options: 'i' };
+    }
+
+    if (category) {
+      // Filtra pela categoria exata
+      query.categoria = category;
+    }
+
+    const produtos = await db.collection("produtos").find(query).toArray();
     return NextResponse.json(produtos, { status: 200 });
 
   } catch (error) {
@@ -18,24 +37,20 @@ export async function GET(request) {
   }
 }
 
-// --- FUNÇÃO POST: Para criar um novo produto (COM A CORREÇÃO) ---
+// --- FUNÇÃO POST (sem alterações) ---
 export async function POST(request) {
   try {
     const client = await clientPromise;
     const db = client.db("e_commerce_db");
     const productData = await request.json();
 
-    // 1. Inserimos o produto
     const result = await db.collection("produtos").insertOne(productData);
 
-    // Em vez de usar result.ops, que não existe mais,
-    // vamos buscar o documento que acabamos de inserir usando o ID retornado.
     const insertedProduct = await db.collection("produtos").findOne({ _id: result.insertedId });
 
-    // 3. Retornamos o documento completo que encontramos
     return NextResponse.json({
       message: "Produto criado com sucesso!",
-      data: insertedProduct, // Retornamos o documento completo
+      data: insertedProduct,
     }, { status: 201 });
 
   } catch (error) {
