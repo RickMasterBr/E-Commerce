@@ -1,15 +1,26 @@
 // Este componente não precisa de 'use client'
 export default function ProductCardSkeleton() {
-    return (
-      <div className="flex flex-col gap-3 pb-3">
-        {/* Placeholder para a imagem */}
-        <div className="w-full aspect-square bg-gray-200 rounded-xl animate-pulse"></div>
-        
-        {/* Placeholder para o texto */}
-        <div className="space-y-2">
-          <div className="h-4 bg-gray-200 rounded-md w-3/4 animate-pulse"></div>
-          <div className="h-3 bg-gray-200 rounded-md w-1/2 animate-pulse"></div>
-        </div>
+  return (
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm animate-pulse">
+      {/* Image skeleton */}
+      <div className="relative aspect-square bg-gray-200">
+        <div className="absolute inset-0 loading-shimmer" />
       </div>
-    );
-  }
+      
+      {/* Content skeleton */}
+      <div className="p-3 space-y-2">
+        {/* Title skeleton */}
+        <div className="space-y-1">
+          <div className="h-4 bg-gray-200 rounded w-3/4 loading-shimmer" />
+          <div className="h-4 bg-gray-200 rounded w-1/2 loading-shimmer" />
+        </div>
+        
+        {/* Price skeleton */}
+        <div className="h-6 bg-gray-200 rounded w-1/3 loading-shimmer" />
+        
+        {/* Stock skeleton */}
+        <div className="h-3 bg-gray-200 rounded w-1/4 loading-shimmer" />
+      </div>
+    </div>
+  );
+}
