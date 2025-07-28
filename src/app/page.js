@@ -1,38 +1,41 @@
-import Image from 'next/image'
-import Button from '@/components/Button'
+import Image from 'next/image';
+import Button from '@/components/Button';
+import ProductCarousel from '@/components/ProductCarousel'; // Importar o novo componente
 
 async function getProducts() {
-  const res = await fetch('http://localhost:3000/api/produtos', { cache: 'no-store' });
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  const res = await fetch(`${apiUrl}/api/produtos`, { cache: 'no-store' });
   if (!res.ok) throw new Error('Erro ao buscar produtos');
   return res.json();
 }
 
 export default async function HomePage() {
   const products = await getProducts();
+  const favoriteProducts = products.slice(0, 5); // Pega os 5 primeiros como favoritos
 
   return (
     <div className="min-h-screen bg-[--color-background] font-sans">
       <main className="px-4 lg:px-40 py-6">
-        {/* Hero Section */}
+        {/* Hero Section (sem alterações) */}
         <section
-  className="relative rounded-xl bg-cover bg-center text-white min-h-[480px] flex flex-col justify-end p-6 md:p-10 gap-4"
-  style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)), url("/Capa-Home.jpg")' }}
->
-  <div className="space-y-2">
-    <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-      Unleash Your Inner Champion
-    </h1>
-    <p className="text-sm md:text-base font-normal">
-      Premium supplements crafted for peak performance and fitness excellence.
-    </p>
-  </div>
-  <Button variant="light" className="w-fit bg-[#e8b4b7] text-[#191011] font-bold rounded-full px-5 py-3 mt-2">
-    Shop Now
-  </Button>
-</section>
+          className="relative rounded-xl bg-cover bg-center text-white min-h-[480px] flex flex-col justify-end p-6 md:p-10 gap-4"
+          style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)), url("/Capa-Home.jpg")' }}
+        >
+          <div className="space-y-2">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+              Unleash Your Inner Champion
+            </h1>
+            <p className="text-sm md:text-base font-normal">
+              Premium supplements crafted for peak performance and fitness excellence.
+            </p>
+          </div>
+          <Button href="/shop" variant="light" className="w-fit bg-[#e8b4b7] text-[#191011] font-bold rounded-full px-5 py-3 mt-2">
+            Shop Now
+          </Button>
+        </section>
 
 
-        {/* Top Categories */}
+        {/* Top Categories (sem alterações) */}
         <section className="pt-10">
           <h2 className="text-[--color-text-dark] text-[22px] font-bold pb-3 px-4">Explore Our Top Categories</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 px-4">
@@ -49,24 +52,10 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Customer Favorites */}
+        {/* --- SEÇÃO CUSTOMER FAVORITES ATUALIZADA --- */}
         <section className="pt-10">
-          <h2 className="text-[--color-text-dark] text-[22px] font-bold pb-3 px-4">Customer Favorites</h2>
-          <div className="flex overflow-x-auto gap-4 px-4 pb-4">
-            {products.map((product) => (
-              <div key={product._id} className="min-w-[200px] flex flex-col bg-white rounded-xl shadow p-4">
-                <div
-                  className="aspect-square bg-center bg-cover rounded-xl mb-2"
-                  style={{ backgroundImage: `url(${product.imagem})` }}
-                ></div>
-                <p className="text-[--color-text-dark] font-medium">{product.nome}</p>
-                <p className="text-[--color-text-accent] text-sm">{product.categoria}</p>
-                <Button className="mt-2 bg-[--color-border-subtle] text-[--color-text-dark] rounded-full py-2 font-bold text-sm">
-                  View Product
-                </Button>
-              </div>
-            ))}
-          </div>
+          <h2 className="text-[--color-text-dark] text-center text-[22px] font-bold pb-3 px-4">Customer Favorites</h2>
+          <ProductCarousel products={favoriteProducts} />
         </section>
       </main>
     </div>
