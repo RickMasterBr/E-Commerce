@@ -9,7 +9,7 @@ function AdminSidebar() {
   // Links de navegação do painel de admin
   const adminLinks = [
     { href: '/admin', label: 'Dashboard' },
-    { href: '/admin/products', label: 'Produtos' },
+    { href: '/admin/produtos', label: 'Produtos' },
     { href: '/admin/orders', label: 'Pedidos' },
     { href: '/admin/users', label: 'Utilizadores' },
   ];
