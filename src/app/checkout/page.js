@@ -39,7 +39,7 @@ export default function CheckoutPage() {
     });
     toast.success('Pedido realizado com sucesso!');
     clearCart();
-    router.push('/');
+    router.push('/order-confirmed');
   };
 
   const orderSummary = useMemo(() => {

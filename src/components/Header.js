@@ -43,6 +43,14 @@ export default function Header() {
         <Button href="/admin/novo" variant="dark">
           Adicionar Produto
         </Button>
+
+        {/* AQUI A MUDANÇA: Ícone de Usuário agora é um Link */}
+        <Link href="/login" className="flex items-center justify-center">
+            <div
+              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+              style={{backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6Aml7Lbc9NCTeBuOZuzAKUdZf0j1KiBMCbV5auRJwcS385vVUhX-uDmMqYtMqJCPeAaevmE1PHllSvLAqvIzdHT5r078MaIDn4B91DmOpmzDSEqd0Yp7pX-oujotbRNym1m79XIe2ImqW0oJUp0Gj_CGwna0YfiJWHQSbl-_DP2E02qC4JaozQqt_yKK5LJoHiFBabmR0ZQ6omHL0iqbOQR3Az7hZ8o28GPh58lRVNXvfXuFjndAROrdLJRNvmQLyRCJe8ysmDRvJ')`}}
+            ></div>
+        </Link>
       </div>
     </header>
   );
