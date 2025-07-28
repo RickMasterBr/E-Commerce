@@ -1,27 +1,41 @@
 'use client';
 
 import { createContext, useState, useContext, useEffect } from 'react';
+import { useSession } from 'next-auth/react'; // Hook para verificar a sessão
 import toast from 'react-hot-toast';
 
 const CartContext = createContext();
-
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const { data: session, status } = useSession(); // Obter dados da sessão
 
-  // Carregar o carrinho do localStorage quando o componente é montado
-  useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
+  // Sincronizar carrinho com o backend
+  const syncCartWithDb = async (cartData) => {
+    if (session) {
+      await fetch('/api/user/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart: cartData }),
+      });
     }
-  }, []);
+  };
 
-  // Salvar o carrinho no localStorage sempre que ele for alterado
+  // Carregar carrinho quando a sessão é carregada
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+    const loadCart = async () => {
+      if (status === 'authenticated') {
+        const res = await fetch('/api/user/cart');
+        const data = await res.json();
+        setCartItems(data.cart || []);
+      } else if (status === 'unauthenticated') {
+        const storedCart = localStorage.getItem('guest_cart');
+        setCartItems(storedCart ? JSON.parse(storedCart) : []);
+      }
+    };
+    loadCart();
+  }, [status]);
 
   const addToCart = (product) => {
     setCartItems(prevItems => {
